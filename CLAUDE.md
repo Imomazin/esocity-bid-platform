@@ -80,9 +80,9 @@ Next.js application. Read [README.md](./README.md) for the tour and [docs/](./do
 ## Conventions
 
 - Next.js 16 App Router: `params`/`searchParams` are promises, the network boundary is
-  `src/proxy.ts`, error boundaries receive `retry`. Run `pnpm exec next typegen` after adding
-  routes so `PageProps<'/route'>` types exist. Read `node_modules/next/dist/docs/` before using an
-  unfamiliar API.
+  `src/proxy.ts`, error boundaries receive `retry`. The global `PageProps<'/route'>` types are
+  generated into `.next/types` (git-ignored): `pnpm typecheck` runs `next typegen` first, so use it
+  rather than bare `tsc`. Read `node_modules/next/dist/docs/` before using an unfamiliar API.
 - React 19 hook rules are enforced by lint: no synchronous `setState` in effects.
 - Server-render by default; client components only for interactivity. Timers subscribe to one
   shared server clock rather than re-rendering pages.
