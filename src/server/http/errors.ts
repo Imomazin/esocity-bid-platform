@@ -1,0 +1,50 @@
+import type { DomainErrorCode } from '@/domain/errors'
+
+/** HTTP status for each domain error code. */
+export const ERROR_STATUS: Record<DomainErrorCode, number> = {
+  NOT_FOUND: 404,
+  AUCTION_NOT_FOUND: 404,
+  AUCTION_NOT_LIVE: 409,
+  AUCTION_ENDED: 409,
+  AUCTION_PAUSED: 409,
+  ALREADY_LEADING: 409,
+  INSUFFICIENT_CREDITS: 402,
+  BID_LIMIT_REACHED: 409,
+  PARTICIPANT_CAP_REACHED: 409,
+  NOT_ELIGIBLE: 403,
+  RESPONSIBLE_USE_LIMIT: 403,
+  ACCOUNT_RESTRICTED: 403,
+  RATE_LIMITED: 429,
+  IDEMPOTENCY_CONFLICT: 409,
+  IDEMPOTENCY_IN_PROGRESS: 409,
+  UNAUTHENTICATED: 401,
+  FORBIDDEN: 403,
+  CSRF_REJECTED: 403,
+  VALIDATION_FAILED: 422,
+  ITEM_UNAVAILABLE: 409,
+  OUT_OF_STOCK: 409,
+  PAYMENT_FAILED: 402,
+  ORDER_NOT_FOUND: 404,
+  PROMOTION_INVALID: 422,
+  INVALID_TRANSITION: 409,
+  FIELD_LOCKED: 409,
+  DROP_NOT_LIVE: 409,
+  DROP_SOLD_OUT: 409,
+  PURCHASE_LIMIT_REACHED: 409,
+  RECOVERY_NOT_ELIGIBLE: 409,
+  AUTOBID_INVALID: 422,
+  FEATURE_DISABLED: 403,
+  CART_EMPTY: 422,
+  CONFLICT: 409,
+  INTERNAL: 500,
+}
+
+/** Customer-facing default copy. Never includes technical details or stack traces. */
+export const ERROR_MESSAGES: Partial<Record<DomainErrorCode, string>> = {
+  RATE_LIMITED: 'You are going a little fast. Please wait a moment and try again.',
+  UNAUTHENTICATED: 'Please enter the demo platform (or sign in) to continue.',
+  FORBIDDEN: 'You do not have access to this action.',
+  CSRF_REJECTED: 'This request could not be verified. Please refresh the page and try again.',
+  INTERNAL: 'Something went wrong on our side. Please try again.',
+  NOT_FOUND: 'We could not find what you were looking for.',
+}

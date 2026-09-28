@@ -1,0 +1,347 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Esocity Bid design tokens.
+ * Neutral-dominant surfaces, ink primary actions, a restrained Esocity cobalt accent, and clear
+ * semantic colours for live, success, warning and danger states (always paired with text/icons).
+ */
+:root {
+  --background: #ffffff;
+  --foreground: #0a0b0f;
+  --surface: #f6f7f9;
+  --card: #ffffff;
+  --card-foreground: #0a0b0f;
+  --popover: #ffffff;
+  --muted: #f2f3f6;
+  --muted-foreground: #5a6170;
+  --subtle-foreground: #7b8190;
+  --border: #e6e8ed;
+  --input: #d9dde4;
+  --ring: #3d4beb;
+  --primary: #0a0b0f;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f2f5;
+  --secondary-foreground: #0a0b0f;
+  --brand: #3d4beb;
+  --brand-strong: #2f3acc;
+  --brand-foreground: #ffffff;
+  --brand-soft: #eef1ff;
+  --brand-soft-foreground: #2830a3;
+  --live: #e0352b;
+  --live-soft: #fdeceb;
+  --live-foreground: #b42318;
+  --success: #0b8a5f;
+  --success-soft: #e7f6ef;
+  --success-foreground: #05603f;
+  --warning: #b26b00;
+  --warning-soft: #fef4e2;
+  --warning-foreground: #8a4b00;
+  --danger: #d92d20;
+  --danger-soft: #fdeceb;
+  --danger-foreground: #b42318;
+  --info: #0b6bcb;
+  --info-soft: #e8f2fc;
+  --shadow-color: 220 30% 12%;
+  --hero-glow: rgba(61, 75, 235, 0.14);
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0a0b0f;
+  --foreground: #f3f4f7;
+  --surface: #0f1116;
+  --card: #13151c;
+  --card-foreground: #f3f4f7;
+  --popover: #171a22;
+  --muted: #1a1d26;
+  --muted-foreground: #9aa1af;
+  --subtle-foreground: #7c8393;
+  --border: #242834;
+  --input: #2d3241;
+  --ring: #7482ff;
+  --primary: #f3f4f7;
+  --primary-foreground: #0a0b0f;
+  --secondary: #1b1e27;
+  --secondary-foreground: #f3f4f7;
+  --brand: #5563fa;
+  --brand-strong: #7482ff;
+  --brand-foreground: #ffffff;
+  --brand-soft: #1a1e3e;
+  --brand-soft-foreground: #bac2ff;
+  --live: #ff5a4e;
+  --live-soft: #35140f;
+  --live-foreground: #ff8f86;
+  --success: #34c98f;
+  --success-soft: #0f2a21;
+  --success-foreground: #6fe0b3;
+  --warning: #f5a524;
+  --warning-soft: #2e2210;
+  --warning-foreground: #fbc265;
+  --danger: #ff5a4e;
+  --danger-soft: #35140f;
+  --danger-foreground: #ff8f86;
+  --info: #5aa9f0;
+  --info-soft: #0f2233;
+  --shadow-color: 220 40% 2%;
+  --hero-glow: rgba(85, 99, 250, 0.22);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, 'SFMono-Regular', Menlo, monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle-foreground: var(--subtle-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-foreground: var(--brand-foreground);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-foreground: var(--brand-soft-foreground);
+  --color-live: var(--live);
+  --color-live-soft: var(--live-soft);
+  --color-live-foreground: var(--live-foreground);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-danger-foreground: var(--danger-foreground);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+
+  --shadow-card:
+    0 1px 2px hsl(var(--shadow-color) / 0.04), 0 1px 3px hsl(var(--shadow-color) / 0.06);
+  --shadow-raised:
+    0 2px 4px hsl(var(--shadow-color) / 0.04), 0 12px 32px -8px hsl(var(--shadow-color) / 0.14);
+  --shadow-float: 0 24px 64px -16px hsl(var(--shadow-color) / 0.28);
+
+  --animate-pulse-dot: pulse-dot 1.6s ease-in-out infinite;
+  --animate-flash: flash 1.1s ease-out;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-rise: rise 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  --animate-ticker: ticker 40s linear infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes flash {
+  0% {
+    background-color: var(--brand-soft);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+  100% {
+    background-position: 400px 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before {
+    border-color: var(--border);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings:
+      'ss01' on,
+      'cv11' on;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--brand-soft);
+    color: var(--brand-soft-foreground);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+/*
+ * Data-visualisation tokens (operator console charts). Categorical slots are used in fixed
+ * order; dark mode uses its own validated steps rather than an automatic inversion.
+ */
+.viz-root {
+  --viz-surface: var(--card);
+  --viz-grid: #e8e9ee;
+  --viz-axis: #c3c2b7;
+  --viz-muted: #898781;
+  --viz-1: #2a78d6;
+  --viz-2: #eb6834;
+  --viz-3: #1baf7a;
+  --viz-4: #eda100;
+  --viz-5: #e87ba4;
+  --viz-seq-1: #cde2fb;
+  --viz-seq-2: #9ec5f4;
+  --viz-seq-3: #6da7ec;
+  --viz-seq-4: #3987e5;
+  --viz-seq-5: #256abf;
+  --viz-seq-6: #184f95;
+  --viz-seq-7: #0d366b;
+  --viz-track: #e3edfb;
+}
+.dark .viz-root {
+  --viz-grid: #262a35;
+  --viz-axis: #383835;
+  --viz-muted: #898781;
+  --viz-1: #3987e5;
+  --viz-2: #d95926;
+  --viz-3: #199e70;
+  --viz-4: #c98500;
+  --viz-5: #d55181;
+  --viz-track: #182338;
+}
+
+@layer utilities {
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--muted) 25%, var(--secondary) 37%, var(--muted) 63%);
+    background-size: 800px 100%;
+    animation: var(--animate-shimmer);
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-grid {
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--foreground) 6%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--foreground) 6%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 44px 44px;
+  }
+
+  .art-backdrop {
+    background: radial-gradient(
+      120% 90% at 50% 30%,
+      color-mix(in oklab, var(--art-backdrop, #eef0f4) 55%, white) 0%,
+      var(--art-backdrop, #eef0f4) 70%
+    );
+  }
+  .dark .art-backdrop {
+    background: radial-gradient(
+      120% 90% at 50% 30%,
+      color-mix(in oklab, var(--art-backdrop, #2a2e38) 16%, #1c1f28) 0%,
+      #13151c 75%
+    );
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

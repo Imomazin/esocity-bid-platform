@@ -1,0 +1,46 @@
+# Local backing services for Phase 2 development (the app itself runs with `pnpm dev`).
+#
+#   docker compose up -d
+#   DATABASE_URL=postgres://postgres@127.0.0.1:5432/esocity pnpm db:migrate
+#   DATABASE_URL=postgres://postgres@127.0.0.1:5432/esocity pnpm db:seed
+#   DATABASE_URL=postgres://postgres@127.0.0.1:5432/esocity_test pnpm test:db
+#
+# Ports are bound to 127.0.0.1 only and PostgreSQL uses trust authentication, so no password lives
+# in this public repository. Never expose these containers beyond your machine.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: esocity
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./db/docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '127.0.0.1:6379:6379'
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+
+volumes:
+  postgres-data:
+  redis-data:
