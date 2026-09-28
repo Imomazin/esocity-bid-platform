@@ -3,6 +3,7 @@ import postgres from 'postgres'
 import * as schema from '@db/schema'
 import { runMigrations } from '@db/migrate'
 import { DEFAULT_ELIGIBILITY } from '@/domain/auction/rules'
+import { TERMS_VERSION } from '@/lib/config/market'
 import { createDatabase, type DatabaseHandle } from '@/server/postgres/client'
 import { PostgresAuctionEngine } from '@/server/postgres/auction-engine'
 
@@ -83,9 +84,10 @@ export async function setupContext(): Promise<TestContext> {
 export async function createMember(
   ctx: TestContext,
   credits: number,
-  options: { role?: (typeof schema.roleEnum.enumValues)[number] } = {},
+  options: { role?: (typeof schema.roleEnum.enumValues)[number]; termsAccepted?: boolean } = {},
 ) {
   counter += 1
+  const termsAccepted = options.termsAccepted ?? true
   const [user] = await ctx.handle.db
     .insert(schema.users)
     .values({
@@ -93,6 +95,8 @@ export async function createMember(
       displayName: `Member ${counter}`,
       handle: `member${counter}`,
       ageVerifiedAt: new Date(),
+      termsAcceptedVersion: termsAccepted ? TERMS_VERSION : null,
+      termsAcceptedAt: termsAccepted ? new Date() : null,
       createdAt: new Date(Date.now() - 400 * 24 * 3_600_000),
     })
     .returning()

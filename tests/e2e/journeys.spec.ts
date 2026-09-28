@@ -120,6 +120,20 @@ test.describe('demo member', () => {
   })
 })
 
+test.describe('compliance', () => {
+  test('a member sees their acceptance of the current terms', async ({ page }) => {
+    await enterDemo(page)
+    const status = await getData<{ currentVersion: string; upToDate: boolean }>(
+      page.request,
+      '/api/account/terms',
+    )
+    expect(status.upToDate).toBe(true)
+    await page.goto('/terms')
+    await expect(page.getByText('You have accepted these terms')).toBeVisible()
+    await expect(page.getByText(`Version ${status.currentVersion}`)).toBeVisible()
+  })
+})
+
 test.describe('operations console', () => {
   test('shows the dashboard and enforces role permissions on the server', async ({ page }) => {
     await page.goto('/admin')

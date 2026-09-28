@@ -26,6 +26,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { FieldHint, Input, Label } from '@/components/ui/input'
 import { Notice } from '@/components/ui/misc'
+import { COMPLIANCE_MESSAGES } from '@/domain/compliance'
 import { api, ApiError, newIdempotencyKey } from '@/lib/client/api'
 import { putSnapshot, seedSnapshot, useAuctionSnapshot } from '@/lib/client/auction-store'
 import { seedServerTime, serverNow, useServerNow } from '@/lib/client/clock'
@@ -663,7 +664,17 @@ function BidControl({
         </Notice>
       ) : null}
       {!viewer.eligibility.eligible ? (
-        <Notice tone="warning">{viewer.eligibility.reasons.join(' ')}</Notice>
+        <Notice tone="warning">
+          {viewer.eligibility.reasons.join(' ')}
+          {viewer.eligibility.reasons.includes(COMPLIANCE_MESSAGES.TERMS) ? (
+            <>
+              {' '}
+              <Link href="/terms" className="font-medium underline">
+                Review the terms
+              </Link>
+            </>
+          ) : null}
+        </Notice>
       ) : null}
       {!viewer.limits.allowed ? (
         <Notice tone="brand" title="Responsible-use limit">

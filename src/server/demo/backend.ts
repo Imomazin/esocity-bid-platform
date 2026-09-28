@@ -1408,6 +1408,51 @@ export class DemoBackend {
     return this.accountOverview(userId).profile
   }
 
+  /** Terms acceptance for the member's market (compliance hook, see src/domain/compliance.ts). */
+  termsStatus(userId: string) {
+    const account = this.account(userId)
+    const current = getMarket(account.market).compliance.termsVersion
+    return {
+      currentVersion: current,
+      acceptedVersion: account.compliance.termsAcceptedVersion,
+      acceptedAt: account.compliance.termsAcceptedAt,
+      upToDate: account.compliance.termsAcceptedVersion === current,
+    }
+  }
+
+  acceptTerms(userId: string, version: string, requestId: string | null) {
+    const now = this.sync()
+    const account = this.account(userId)
+    const current = getMarket(account.market).compliance.termsVersion
+    if (version !== current) {
+      throw new DomainError(
+        'CONFLICT',
+        'These terms have been updated. Please reload and review the latest version.',
+        {
+          currentVersion: current,
+        },
+      )
+    }
+    if (account.compliance.termsAcceptedVersion !== current) {
+      account.compliance = {
+        ...account.compliance,
+        termsAcceptedVersion: current,
+        termsAcceptedAt: now,
+      }
+      audit(this.ctx, {
+        actor: memberActor(account),
+        action: 'account.terms_accepted',
+        entityType: 'USER',
+        entityId: account.id,
+        summary: `Accepted member terms version ${current}`,
+        metadata: { version: current },
+        requestId,
+        at: now,
+      })
+    }
+    return this.termsStatus(userId)
+  }
+
   updatePreferences(
     userId: string,
     input: { theme?: 'system' | 'light' | 'dark'; interests?: string[] },

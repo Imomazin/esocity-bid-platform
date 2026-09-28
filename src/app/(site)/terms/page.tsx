@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import { TermsAcceptance } from '@/components/account/terms-acceptance'
 import { ContentPage, DemoLegalNotice, ProseSection } from '@/components/content/content-page'
+import { getViewer } from '@/server/auth/session'
+import { getBackend } from '@/server/runtime'
 
 export const metadata: Metadata = {
   title: 'Terms of use',
@@ -9,7 +12,9 @@ export const metadata: Metadata = {
   alternates: { canonical: '/terms' },
 }
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const viewer = await getViewer()
+  const termsStatus = viewer ? getBackend().termsStatus(viewer.userId) : null
   return (
     <ContentPage
       eyebrow="Legal"
@@ -28,6 +33,7 @@ export default function TermsPage() {
       ]}
     >
       <DemoLegalNotice document="terms" />
+      {termsStatus ? <TermsAcceptance status={termsStatus} /> : null}
 
       <ProseSection id="about" title="About these terms">
         <p>

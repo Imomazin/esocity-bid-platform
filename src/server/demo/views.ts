@@ -1,6 +1,5 @@
 import { remainingAllocation, type AutoBidRule } from '@/domain/auction/autobid'
 import { quoteRecovery } from '@/domain/auction/recovery'
-import { checkEligibility } from '@/domain/auction/rules'
 import type { BidEvent } from '@/domain/auction/types'
 import type { Product } from '@/domain/catalog'
 import { checkDropPurchase, dropStatus } from '@/domain/drops'
@@ -30,7 +29,7 @@ import type {
   WalletView,
 } from '@/server/views'
 
-import { accountTier, inventoryEvents, usageSnapshot, type Ctx } from './context'
+import { accountTier, bidderEligibility, inventoryEvents, usageSnapshot, type Ctx } from './context'
 import { CREDIT_VALUE_MINOR } from './data/commerce'
 import type { AuctionRecord, DemoAccount, DropInstance } from './state'
 import { simulatedDropSales } from './world'
@@ -251,17 +250,7 @@ export function viewerAuctionState(
 ): ViewerAuctionState {
   const participant = record.participants.get(account.id)
   const wallet = summarizeWallet(account.ledger, now)
-  const eligibility = checkEligibility(
-    record.state.rules.eligibility,
-    {
-      tier: accountTier(account, now),
-      previousWins: account.previousWins,
-      accountCreatedAt: account.createdAt,
-      market: account.market,
-      ageVerifiedAtLeast: account.profile.ageVerified ? 18 : 0,
-    },
-    now,
-  )
+  const eligibility = bidderEligibility(account, record.state.rules.eligibility, now)
   const limits = checkBidAllowance(
     account.limits,
     usageSnapshot(account, now),

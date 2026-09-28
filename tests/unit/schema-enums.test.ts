@@ -8,6 +8,7 @@ import {
   type BidKind,
   type RecoveryMode,
 } from '@/domain/auction/types'
+import { KYC_STATUSES } from '@/domain/compliance'
 import type { FraudCaseStatus, RiskAction, RiskClass } from '@/domain/fraud'
 import { INVENTORY_EVENT_TYPES } from '@/domain/inventory'
 import { NOTIFICATION_TYPES } from '@/domain/notifications'
@@ -39,6 +40,7 @@ describe('database enums mirror the domain', () => {
     ['ticket_status', db.ticketStatusEnum.enumValues, TICKET_STATUSES],
     ['ticket_category', db.ticketCategoryEnum.enumValues, TICKET_CATEGORIES],
     ['audit_severity', db.auditSeverityEnum.enumValues, AUDIT_SEVERITIES],
+    ['kyc_status', db.kycStatusEnum.enumValues, KYC_STATUSES],
     [
       'bid_kind',
       db.bidKindEnum.enumValues,

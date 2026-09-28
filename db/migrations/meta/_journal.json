@@ -15,6 +15,13 @@
       "when": 1790610900126,
       "tag": "0001_append_only_guards",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790630981138,
+      "tag": "0002_compliance_hooks",
+      "breakpoints": true
     }
   ]
 }

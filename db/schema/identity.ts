@@ -14,7 +14,14 @@ import {
   uuid,
 } from 'drizzle-orm/pg-core'
 
-import { currencyEnum, marketEnum, rewardTierEnum, roleEnum, userStatusEnum } from './enums'
+import {
+  currencyEnum,
+  kycStatusEnum,
+  marketEnum,
+  rewardTierEnum,
+  roleEnum,
+  userStatusEnum,
+} from './enums'
 
 const createdAt = () =>
   timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow()
@@ -37,6 +44,10 @@ export const users = pgTable(
     /** Age is verified (18+) without storing the full date of birth where the provider allows. */
     ageVerifiedAt: timestamp('age_verified_at', { withTimezone: true, mode: 'date' }),
     dateOfBirth: date('date_of_birth', { mode: 'string' }),
+    /** Compliance hooks (src/domain/compliance.ts): accepted terms version and identity status. */
+    termsAcceptedVersion: text('terms_accepted_version'),
+    termsAcceptedAt: timestamp('terms_accepted_at', { withTimezone: true, mode: 'date' }),
+    kycStatus: kycStatusEnum('kyc_status').notNull().default('NOT_STARTED'),
     market: marketEnum('market').notNull().default('UK'),
     status: userStatusEnum('status').notNull().default('ACTIVE'),
     restrictionReason: text('restriction_reason'),

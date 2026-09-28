@@ -1,3 +1,12 @@
+import { checkEligibility, type EligibilityDecision } from '@/domain/auction/rules'
+import type { EligibilityRules } from '@/domain/auction/types'
+import {
+  checkCompliance,
+  withCompliance,
+  type ComplianceAction,
+  type ComplianceProfile,
+} from '@/domain/compliance'
+import { DomainError } from '@/domain/errors'
 import type { InventoryEvent } from '@/domain/inventory'
 import { projectInventory } from '@/domain/inventory'
 import {
@@ -7,6 +16,7 @@ import {
 } from '@/domain/notifications'
 import { qualifyingPoints, tierForPoints, type RewardTier } from '@/domain/rewards'
 import { collectExpiries } from '@/domain/wallet'
+import { getMarket } from '@/lib/config/market'
 import { newId } from '@/lib/ids'
 import { startOfLondonDay, startOfLondonMonth, startOfLondonWeek } from '@/lib/time'
 import type { AuditActor, AuditEntityType, AuditSeverity } from '@/server/infra/audit'
@@ -163,6 +173,51 @@ export function usageSnapshot(account: DemoAccount, now: number): Usage {
 
 export function accountTier(account: DemoAccount, now: number): RewardTier {
   return tierForPoints(qualifyingPoints(account.rewards, now))
+}
+
+export function complianceProfile(account: DemoAccount): ComplianceProfile {
+  return {
+    termsAcceptedVersion: account.compliance.termsAcceptedVersion,
+    ageVerified: account.profile.ageVerified,
+    kycStatus: account.compliance.kycStatus,
+  }
+}
+
+/** Throws NOT_ELIGIBLE when the member's market requires terms, age or identity checks first. */
+export function assertCompliance(account: DemoAccount, action: ComplianceAction): void {
+  const decision = checkCompliance(
+    action,
+    complianceProfile(account),
+    getMarket(account.market).compliance,
+  )
+  if (!decision.allowed) {
+    throw new DomainError('NOT_ELIGIBLE', decision.message, { requirement: decision.requirement })
+  }
+}
+
+/** Auction eligibility for a member: the auction's rules plus the market's compliance gates. */
+export function bidderEligibility(
+  account: DemoAccount,
+  rules: EligibilityRules,
+  now: number,
+): EligibilityDecision {
+  const eligibility = checkEligibility(
+    rules,
+    {
+      tier: accountTier(account, now),
+      previousWins: account.previousWins,
+      accountCreatedAt: account.createdAt,
+      market: account.market,
+      ageVerifiedAtLeast: account.profile.ageVerified ? 18 : 0,
+    },
+    now,
+  )
+  const compliance = checkCompliance(
+    'PLACE_BID',
+    complianceProfile(account),
+    getMarket(account.market).compliance,
+  )
+  return withCompliance(eligibility, compliance)
 }
 
 export function isSimulatedId(id: string | null): boolean {

@@ -1,6 +1,7 @@
 import type { AutoBidRule } from '@/domain/auction/autobid'
 import type { AuctionState, BidEvent, Participant } from '@/domain/auction/types'
 import type { Brand, Category, Product, PurchaseOrder, Supplier } from '@/domain/catalog'
+import type { KycStatus } from '@/domain/compliance'
 import type { FlashDrop } from '@/domain/drops'
 import type { FraudCase, RiskClass } from '@/domain/fraud'
 import type { InventoryEvent } from '@/domain/inventory'
@@ -108,6 +109,12 @@ export interface DemoAccount {
   ticketIds: string[]
   weeklyStreak: number
   restricted: { reason: string } | null
+  /** Terms acceptance and identity status (compliance hooks, see src/domain/compliance.ts). */
+  compliance: {
+    termsAcceptedVersion: string | null
+    termsAcceptedAt: number | null
+    kycStatus: KycStatus
+  }
   /** De-duplication keys for one-off notifications (e.g. drop started). */
   notificationKeys: Set<string>
   /** Seeded participation in auctions that pre-date the live demo world (display only). */

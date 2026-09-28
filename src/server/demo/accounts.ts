@@ -10,6 +10,7 @@ import {
   type CreditBucket,
   type LedgerEntry,
 } from '@/domain/wallet'
+import { TERMS_VERSION } from '@/lib/config/market'
 import { newId, shortReference } from '@/lib/ids'
 import { DAY, HOUR, MINUTE } from '@/lib/time'
 import { demoTrackingNumber } from '@/server/providers/shipping'
@@ -207,6 +208,12 @@ export function createSessionAccount(ctx: Ctx, sessionId: string, now: number): 
     ticketIds: [],
     weeklyStreak: 4,
     restricted: null,
+    // Entering the demo platform accepts the (demo) member terms.
+    compliance: {
+      termsAcceptedVersion: TERMS_VERSION,
+      termsAcceptedAt: now,
+      kycStatus: 'NOT_STARTED',
+    },
     notificationKeys: new Set(),
     archivedBidding: [],
   }

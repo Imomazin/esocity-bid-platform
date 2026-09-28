@@ -190,6 +190,28 @@ describe('demo auction engine under concurrency', () => {
     })
   })
 
+  it('asks for the updated terms before bidding, buying bids or checking out, until accepted', async () => {
+    const { backend } = createBackend()
+    const record = openAuction(backend)
+    const [member] = members(backend, 1)
+    backend.state.accounts.get(member!)!.compliance.termsAcceptedVersion = '2025-01-01'
+    await expect(backend.placeBid(member!, record.state.id, null)).rejects.toMatchObject({
+      code: 'NOT_ELIGIBLE',
+    })
+    await expect(
+      backend.purchaseBidPackage(member!, 'starter', { paymentMethod: 'DEMO_CARD' }),
+    ).rejects.toMatchObject({ code: 'NOT_ELIGIBLE', details: { requirement: 'TERMS' } })
+    expect(backend.termsStatus(member!).upToDate).toBe(false)
+    expect(() => backend.acceptTerms(member!, '2025-01-01', null)).toThrow(
+      expect.objectContaining({ code: 'CONFLICT' }),
+    )
+    const current = backend.termsStatus(member!).currentVersion
+    expect(backend.acceptTerms(member!, current, null).upToDate).toBe(true)
+    await expect(backend.placeBid(member!, record.state.id, null)).resolves.toMatchObject({
+      accepted: true,
+    })
+  })
+
   it('stops every AutoBid agent when operations pull the kill switch', () => {
     const { backend } = createBackend()
     const record = openAuction(backend)

@@ -7,6 +7,8 @@ The production data model is PostgreSQL 15+ managed with Drizzle ORM:
   `CHECK` constraints).
 - `db/migrations/0001_append_only_guards.sql` — hand-written triggers that make ledgers
   immutable.
+- `db/migrations/0002_compliance_hooks.sql` — terms acceptance and identity-verification (KYC)
+  status on `users`, used by the compliance gate (see [COMPLIANCE.md](./COMPLIANCE.md)).
 - `db/seed/index.ts` — idempotent seed (safe to run repeatedly): catalogue, suppliers, opening
   stock, bid packages, promotions, feature flags, fictional staff and demo member, scheduled
   auctions and drops.

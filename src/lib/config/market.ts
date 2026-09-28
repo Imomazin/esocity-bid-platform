@@ -1,3 +1,4 @@
+import type { CompliancePolicy } from '@/domain/compliance'
 import type { CurrencyCode } from '@/lib/money'
 
 /**
@@ -39,6 +40,19 @@ export interface MarketConfig {
   shippingMethods: ShippingMethodConfig[]
   returnsWindowDays: number
   statutoryCoolingOffDays: number
+  /** Terms, age and identity gates per action. Hooks only; set by legal review (docs/COMPLIANCE.md). */
+  compliance: CompliancePolicy
+}
+
+/** Current member terms version. Bumping it requires members to accept the new terms. */
+export const TERMS_VERSION = '2026-09-01'
+
+const STANDARD_COMPLIANCE: CompliancePolicy = {
+  termsVersion: TERMS_VERSION,
+  termsRequiredFor: ['PLACE_BID', 'BUY_BID_PACK', 'CHECKOUT'],
+  ageVerificationRequiredFor: ['PLACE_BID', 'BUY_BID_PACK'],
+  // KYC placeholder: no market requires identity verification until legal review says otherwise.
+  kycRequiredFor: [],
 }
 
 export const MARKETS: Record<MarketCode, MarketConfig> = {
@@ -86,6 +100,7 @@ export const MARKETS: Record<MarketCode, MarketConfig> = {
     ],
     returnsWindowDays: 30,
     statutoryCoolingOffDays: 14,
+    compliance: STANDARD_COMPLIANCE,
   },
   IE: {
     code: 'IE',
@@ -114,6 +129,7 @@ export const MARKETS: Record<MarketCode, MarketConfig> = {
     ],
     returnsWindowDays: 30,
     statutoryCoolingOffDays: 14,
+    compliance: STANDARD_COMPLIANCE,
   },
   US: {
     code: 'US',
@@ -142,6 +158,7 @@ export const MARKETS: Record<MarketCode, MarketConfig> = {
     ],
     returnsWindowDays: 30,
     statutoryCoolingOffDays: 0,
+    compliance: STANDARD_COMPLIANCE,
   },
 }
 

@@ -205,6 +205,15 @@ describe('PostgreSQL auction engine', () => {
     )
   })
 
+  it('requires the current member terms before bidding (compliance hook)', async () => {
+    const member = await createMember(ctx, 5, { termsAccepted: false })
+    const auction = await createLiveAuction(ctx)
+    expect(await errorCode(ctx.engine.placeBid({ auctionId: auction.id, userId: member.id }))).toBe(
+      'NOT_ELIGIBLE',
+    )
+    expect((await ctx.engine.walletSummary(member.id)).available).toBe(5)
+  })
+
   it('finalises exactly once, picks the leader and creates the winner order', async () => {
     const [alice, bob] = await Promise.all([createMember(ctx, 5), createMember(ctx, 5)])
     const auction = await createLiveAuction(ctx)

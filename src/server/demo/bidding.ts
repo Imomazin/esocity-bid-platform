@@ -1,5 +1,4 @@
 import { applyAcceptedBid, evaluateBid } from '@/domain/auction/bidding'
-import { checkEligibility } from '@/domain/auction/rules'
 import type { BidEvent, BidKind, Participant } from '@/domain/auction/types'
 import type { DomainErrorCode } from '@/domain/errors'
 import { assessRisk, detectBidSignals } from '@/domain/fraud'
@@ -9,7 +8,7 @@ import { newId } from '@/lib/ids'
 import { formatMinor } from '@/lib/money'
 
 import {
-  accountTier,
+  bidderEligibility,
   audit,
   expireCredits,
   isSimulatedId,
@@ -77,17 +76,7 @@ export function placeMemberBid(
   const usage = usageSnapshot(account, at)
   const cost = record.state.rules.bidCreditCost
   const limitDecision = checkBidAllowance(account.limits, usage, cost, at)
-  const eligibility = checkEligibility(
-    record.state.rules.eligibility,
-    {
-      tier: accountTier(account, at),
-      previousWins: account.previousWins,
-      accountCreatedAt: account.createdAt,
-      market: account.market,
-      ageVerifiedAtLeast: account.profile.ageVerified ? 18 : 0,
-    },
-    at,
-  )
+  const eligibility = bidderEligibility(account, record.state.rules.eligibility, at)
   const attempt = { bidderId: account.id, bidderName: account.handle, kind, at }
   const decision = evaluateBid(record.state, attempt, {
     bidsInAuction: participant?.bids ?? 0,

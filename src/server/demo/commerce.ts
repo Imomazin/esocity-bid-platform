@@ -26,6 +26,7 @@ import type { CheckoutMode, CheckoutPreview } from '@/server/views'
 import {
   accountTier,
   appendInventory,
+  assertCompliance,
   audit,
   availableStock,
   inventoryEvents,
@@ -422,6 +423,7 @@ export async function placeOrder(
   now: number,
 ): Promise<Order> {
   const { state } = ctx
+  assertCompliance(account, 'CHECKOUT')
   const resolved = resolveCheckout(ctx, account, mode, now)
   if (resolved.drop) {
     const sold = simulatedDropSales(resolved.drop, now) + resolved.drop.realSold
@@ -798,6 +800,7 @@ export async function purchaseBidPackage(
   const { state } = ctx
   const pack = state.packages.find((item) => item.id === packageId && item.active)
   if (!pack) throw new DomainError('NOT_FOUND', 'That bid pack is not available.')
+  assertCompliance(account, 'BUY_BID_PACK')
   let discountMinor = 0
   let promoBonus = 0
   let promotion: Promotion | null = null

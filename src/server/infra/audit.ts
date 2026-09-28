@@ -21,6 +21,7 @@ export const AUDIT_ENTITY_TYPES = [
   'PROMOTION',
   'SUPPORT_TICKET',
   'FRAUD_CASE',
+  'USER',
   'USER_LIMITS',
   'FEATURE_FLAG',
   'SESSION',

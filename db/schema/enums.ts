@@ -23,6 +23,13 @@ export const userStatusEnum = pgEnum('user_status', [
 export const marketEnum = pgEnum('market', ['UK', 'IE', 'US'])
 export const currencyEnum = pgEnum('currency', ['GBP', 'EUR', 'USD'])
 export const rewardTierEnum = pgEnum('reward_tier', ['MEMBER', 'SILVER', 'GOLD', 'PLATINUM'])
+/** Identity verification (KYC) status: a compliance placeholder until a market requires it. */
+export const kycStatusEnum = pgEnum('kyc_status', [
+  'NOT_STARTED',
+  'PENDING',
+  'VERIFIED',
+  'REJECTED',
+])
 
 export const productStatusEnum = pgEnum('product_status', ['ACTIVE', 'DRAFT', 'ARCHIVED'])
 export const productConditionEnum = pgEnum('product_condition', ['NEW', 'REFURBISHED', 'OPEN_BOX'])

@@ -15,6 +15,7 @@ import {
 import { DROP_SERIES } from '@/server/demo/data/drops'
 import { AUCTION_SERIES, seriesRules } from '@/server/demo/data/series'
 import { DEFAULT_FLAGS, FLAG_DESCRIPTIONS, type FeatureFlag } from '@/lib/config/flags'
+import { TERMS_VERSION } from '@/lib/config/market'
 import { deterministicUuid } from '@/lib/rng'
 import { DAY, HOUR, MINUTE } from '@/lib/time'
 import { createDatabase, type Database } from '@/server/postgres/client'
@@ -272,6 +273,8 @@ export async function seed(db: Database, now = Date.now()): Promise<SeedSummary>
       lastName: 'Member',
       ageVerifiedAt: new Date(anchorDay),
       emailVerifiedAt: new Date(anchorDay),
+      termsAcceptedVersion: TERMS_VERSION,
+      termsAcceptedAt: new Date(anchorDay),
     })
     .onConflictDoNothing()
   await db

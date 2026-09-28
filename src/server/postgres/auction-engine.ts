@@ -10,6 +10,7 @@ import {
 import { checkEligibility } from '@/domain/auction/rules'
 import { transition } from '@/domain/auction/state-machine'
 import type { AuctionResult, AuctionState, AuctionStatus } from '@/domain/auction/types'
+import { checkCompliance, withCompliance } from '@/domain/compliance'
 import { DomainError } from '@/domain/errors'
 import {
   applyMaturedChanges,
@@ -25,6 +26,7 @@ import {
   type LedgerEntry,
   type LedgerEntryType,
 } from '@/domain/wallet'
+import { getMarket } from '@/lib/config/market'
 import { newId, shortReference } from '@/lib/ids'
 import { HOUR, startOfLondonDay, startOfLondonWeek } from '@/lib/time'
 
@@ -321,16 +323,27 @@ export class PostgresAuctionEngine {
         bidsInAuction: participantRow?.bids ?? 0,
         isParticipant: !!participantRow,
         availableCredits: summary.available,
-        eligibility: checkEligibility(
-          state.rules.eligibility,
-          {
-            tier: reward?.tier ?? 'MEMBER',
-            previousWins: user.previousWins,
-            accountCreatedAt: user.createdAt.getTime(),
-            market: user.market,
-            ageVerifiedAtLeast: user.ageVerifiedAt ? 18 : 0,
-          },
-          now,
+        eligibility: withCompliance(
+          checkEligibility(
+            state.rules.eligibility,
+            {
+              tier: reward?.tier ?? 'MEMBER',
+              previousWins: user.previousWins,
+              accountCreatedAt: user.createdAt.getTime(),
+              market: user.market,
+              ageVerifiedAtLeast: user.ageVerifiedAt ? 18 : 0,
+            },
+            now,
+          ),
+          checkCompliance(
+            'PLACE_BID',
+            {
+              termsAcceptedVersion: user.termsAcceptedVersion,
+              ageVerified: user.ageVerifiedAt !== null,
+              kycStatus: user.kycStatus,
+            },
+            getMarket(user.market).compliance,
+          ),
         ),
         limits: checkBidAllowance(limits, usageFromLedger(ledger, now), cost, now),
         restricted:

@@ -27,6 +27,7 @@ PostgreSQL auction engine, Redis-backed controls and provider adapters.
 | **Rewards**                       | Tiers, points on purchases (never on bid spend), achievements and redemptions.                                                                                                                                                                                                          |
 | **Account**                       | Orders and tracking, watchlist, notifications, addresses, preferences, and responsible-use limits (24-hour delay on increases, cool-off breaks).                                                                                                                                        |
 | **Operations console** (`/admin`) | Dashboard, analytics, auctions (create, edit rules, pause/resume/cancel), products, inventory, suppliers, orders and fulfilment, payments and refunds, promotions, customers, support, fraud intelligence and the audit log, with role-based access you can switch between in the demo. |
+| **Compliance hooks**              | Per-market switches for paid bidding and bid recovery, age and jurisdiction eligibility, terms acceptance (versioned), promotion restrictions, spending controls and a KYC placeholder — configuration, not legal conclusions ([COMPLIANCE](./docs/COMPLIANCE.md)).                     |
 
 ## Quick start
 
