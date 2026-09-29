@@ -104,10 +104,16 @@ Read more in [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md).
 
 ## Deploying
 
-Import the repository into Vercel with default settings (framework auto-detected, root `./`,
-pnpm). Set `DEMO_MODE=true` (the default) and deploy. The step-by-step guide and the integration
-sequence (PostgreSQL → Redis → Auth → Stripe → realtime → email → storage → shipping) are in
-[docs/VERCEL_DEPLOYMENT.md](./docs/VERCEL_DEPLOYMENT.md).
+**[Import this repository into Vercel](https://vercel.com/new/import?s=https%3A%2F%2Fgithub.com%2FImomazin%2Fesocity-bid-platform)**
+(or open [vercel.com/new](https://vercel.com/new) and pick `Imomazin/esocity-bid-platform`).
+
+Keep the detected settings (Next.js, root `./`, pnpm) and deploy — no environment variables are
+needed, because `DEMO_MODE` defaults to `true`. Optionally set `NEXT_PUBLIC_APP_URL` to the
+deployment URL. Vercel then redeploys on every push and posts a preview link on every pull request.
+Check `https://<your-deployment>/api/health` reports `"mode":"demo"`.
+
+The step-by-step guide and the integration sequence (PostgreSQL → Redis → Auth → Stripe →
+realtime → email → storage → shipping) are in [docs/VERCEL_DEPLOYMENT.md](./docs/VERCEL_DEPLOYMENT.md).
 
 ## Documentation
 
